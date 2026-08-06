@@ -42,6 +42,21 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
+  const handleDelete = (id) => {
+    const person = persons.find(p => p.id === id)
+    if (window.confirm(`Delete ${person.name}?`)) {
+      personService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter(p => p.id !== id))
+        })
+        .catch(error => {
+          alert(`Information of ${person.name} has already been removed from server`)
+          console.error(error)
+        })
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -58,7 +73,7 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons persons={persons} />
+      <Persons persons={persons} handleDelete={handleDelete} />
     </div>
   )
 }
