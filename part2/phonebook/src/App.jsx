@@ -1,12 +1,14 @@
 import { useState } from 'react'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
 
 const App = () => {
-
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456' }
-  ]) 
+  ])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+
   const addPerson = (event) => {
     event.preventDefault()
     if (persons.find(person => person.name === newName)) {
@@ -14,7 +16,8 @@ const App = () => {
       return
     }
     setPersons(persons.concat({ name: newName, number: newNumber }))
-    
+    setNewName('')
+    setNewNumber('')
   }
 
   const handleNameChange = (event) => {
@@ -28,19 +31,20 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <form>
-        <div>
-          name: <input value={newName} onChange={handleNameChange} />
-          number: <input value={newNumber} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit" onClick={addPerson}>add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      {persons.map(person => 
-      <p key={person.name}>{person.name} {person.number}</p>
-    )}
+
+      <h3>Add a new</h3>
+
+      <PersonForm
+        newName={newName}
+        newNumber={newNumber}
+        onSubmit={addPerson}
+        onNameChange={handleNameChange}
+        onNumberChange={handleNumberChange}
+      />
+
+      <h3>Numbers</h3>
+
+      <Persons persons={persons} />
     </div>
   )
 }
