@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
-import axios from 'axios'
+import personService from './components/services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -9,11 +9,11 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-      })
+    personService
+    .getAll()
+    .then(initialPersons => {
+      setPersons(initialPersons)
+    })
   }, [])
 
   const addPerson = (event) => {
@@ -22,16 +22,16 @@ const App = () => {
       alert(`${newName} is already in the phonebook`)
       return
     }
-    axios
-      .post('http://localhost:3001/persons', { name: newName, number: newNumber })
-      .then(response => {
-        setPersons(persons.concat(response.data))
-        setNewName('')
-        setNewNumber('')
-      })
-      .catch(error => {
-        console.log(error)
-      })
+    personService
+    .create({ name: newName, number: newNumber })
+    .then(returnedPerson => {
+      setPersons(persons.concat(returnedPerson))
+      setNewName('')
+      setNewNumber('')
+    })  
+    .catch(error => {
+      console.error('Error creating person:', error)
+    })
   }
 
   const handleNameChange = (event) => {
