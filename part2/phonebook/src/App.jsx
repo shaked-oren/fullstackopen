@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './components/services/persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -28,6 +30,10 @@ const App = () => {
       setPersons(persons.concat(returnedPerson))
       setNewName('')
       setNewNumber('')
+      setMessage(`Added ${returnedPerson.name}`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     })  
     .catch(error => {
       console.error('Error creating person:', error)
@@ -60,6 +66,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification message={message} />
 
       <h3>Add a new</h3>
 
