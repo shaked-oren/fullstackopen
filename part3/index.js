@@ -58,6 +58,15 @@ app.delete('/api/person/:id', (request, response) => {
 
 app.post('/api/person', (request, response) => {
   let person = request.body
+  if (!person.name) {
+    return response.status(400).json({ error: 'name is required' })
+  }
+  if (!person.number) {
+    return response.status(400).json({ error: 'number is required' })
+  }
+  if (persons.find(p => p.name === person.name)) {
+    return response.status(400).json({ error: 'name must be unique' })
+  }
   person.id = Math.floor(Math.random() * 1000000).toString()
   persons = persons.concat(person)
   response.json(person)
